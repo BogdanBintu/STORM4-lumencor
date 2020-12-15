@@ -21,11 +21,12 @@ class APump(object):
                  parameters = False):
 
         # Define attributes
-        self.com_port = parameters.get("pump_com_port", 3)
+        self.com_port = parameters.get("pump_com_port", "COM14")
         self.pump_ID = parameters.get("pump_ID", 30)
         self.verbose = parameters.get("verbose", True)
         self.simulate = parameters.get("simulate_pump", True)
-        self.serial_verbose = parameters.get("serial_verbose", True)
+        self.serial_verbose = parameters.get("serial_verbose", False)
+        self.serial_verbose = True
         
         # Create serial port
         if not self.simulate:
@@ -38,13 +39,13 @@ class APump(object):
                                         timeout = 0.1)
 
         # Define important serial characters
-        self.acknowledge = '\x06'
-        self.carriage_return = '\x0D'
+        self.acknowledge = b'\x06'
+        self.carriage_return = b'\x0D'
         self.ready_signal = b'\x0A'
-        self.negative_acknowledge = '\x15'
-        self.line_feed = '\x0A'
-        self.pound_sign = '\x23'
-        self.disconnect_signal = '\xFF'
+        self.negative_acknowledge = b'\x15'
+        self.line_feed = b'\x0A'
+        self.pound_sign = b'\x23'
+        self.disconnect_signal = b'\xFF'
         self.message_complete_flag = 128
         self.max_attempt_number = 10
 
@@ -58,7 +59,7 @@ class APump(object):
         self.identification = ""
         
         # Configure device
-        self.connectPump()
+        #self.connectPump()
 
     # ------------------------------------------------------------------------------------
     # Connect Pump
@@ -70,7 +71,7 @@ class APump(object):
             self.write(self.disconnect_signal)
             time.sleep(0.1)
             self.read(1)
-            self.write(chr(self.pump_ID + 128))
+            self.write(bytes([self.pump_ID + 128]))
             self.read(1)
         else:
             print("Simulating a Rainin RP1 Pump")
@@ -111,9 +112,9 @@ class APump(object):
     def enableRemoteControl(self, remote_control):
         if not self.simulate:
             if remote_control:
-                self.sendBufferedCommand("L")
+                self.sendBufferedCommand(b'L')
             else:
-                self.sendBufferedCommand("U")
+                self.sendBufferedCommand(b'U')
         else:
             if remote_control: self.control_status == "Remote"
             else: self.control_status == "Keypad"
@@ -131,7 +132,7 @@ class APump(object):
     def getPumpIdentification(self):
         if self.verbose: print("Requesting Pump ID")
         if not self.simulate:
-            message = self.sendImmediateCommand("%")
+            message = self.sendImmediateCommand(b"%")
             self.identification = message
         else:
             self.identification = "Simulated"
@@ -155,10 +156,10 @@ class APump(object):
     def readDisplay(self):
         message = []
         if not self.simulate:
-            message = self.sendImmediateCommand("R")
+            message = self.sendImmediateCommand(b"R")
 
             # Parse direction and movement
-            direction = {" ": "Not Running", "+": "Forward", "-": "Reverse"}.get(message[0], "Unknown")
+            direction = {b" ": "Not Running", b"+": "Forward", b"-": "Reverse"}.get(message[0], "Unknown")
             if direction == "Not Running":
                 self.flow_status = "Stopped"
             elif direction == "Forward":
@@ -169,10 +170,10 @@ class APump(object):
                 self.direction = "Reverse"
             
             # Parse control status
-            self.control_status = {"K": "Keypad", "R": "Remote"}.get(message[6], "Unknown")
+            self.control_status = {b"K": "Keypad", b"R": "Remote"}.get(message[6], "Unknown")
 
             # Parse autostart
-            self.auto_start = {"*": "Enabled", " ": "Disabled"}.get(message[7], "Unknown")
+            self.auto_start = {b"*": "Enabled", b" ": "Disabled"}.get(message[7], "Unknown")
 
             # Parse speed
             self.speed = float(message[1:5])
@@ -220,14 +221,15 @@ class APump(object):
     def sendBufferedCommand(self, command_string):
         # Compose command message
         command_message = command_string + self.carriage_return;
-
+        
         # Poll pump to determine if ready for buffered command
         ready = False
         attempt_number = 0
         while not ready:
             self.write(self.line_feed)
             response = self.read(1)
-            
+            print('R: '+ str(response))
+            print('R2: ' + str(self.ready_signal))
             if response == self.ready_signal:
                 ready = True
                 self.read(10) # Clear buffer
@@ -244,9 +246,10 @@ class APump(object):
         for character in command_message:
             received = False
             while not received:
-                self.write(chr(ord(character)))
+                toWrite = bytes([character])
+                self.write(toWrite)
                 response = self.read(1)
-                if response == character.encode():
+                if response == toWrite:
                     received = True
                 else:
                     if self.verbose: print("Error in transmission of " + str((character, '')))
@@ -259,7 +262,7 @@ class APump(object):
     # ------------------------------------------------------------------------------------ 
     def sendImmediateCommand(self, command_letter):
         # Write single letter command
-        self.write(chr(ord(command_letter)))
+        self.write(command_letter)
 
         # Get response
         message = []
@@ -267,15 +270,17 @@ class APump(object):
         attempt_number = 0
         while not done:
             response = self.read(1)
+            print('Response received')
+            print(response)
             
             if ord(response) > 128:
                 done = True
                 message.append( chr(ord(response)-128))
             else:
                 message.append(response)
-                self.write(chr(ord(self.acknowledge)))
-          
-        return ''.join([b.decode('utf-8') if isinstance(b, (bytes, bytearray)) else b for b in message]) # Convert list of char to string
+                self.write(self.acknowledge)
+                         
+        return message # Convert list of char to string
     
     # ------------------------------------------------------------------------------------
     # Set Flow Direction: True = Forward; False = Backward
@@ -357,23 +362,27 @@ class APump(object):
     # Write to Serial Port
     # ------------------------------------------------------------------------------------ 
     def write(self, message):
-        self.serial.write(message.encode())
+        self.serial.write(message)
         if self.serial_verbose: print("Wrote: " + str(("", message)))
 
     # ------------------------------------------------------------------------------------
     # Read from Serial Port
     # ------------------------------------------------------------------------------------ 
-    def read(self, num_char):
+    def read(self, num_char): 
         response = self.serial.read(num_char)
         if self.serial_verbose: print("Read: " + str(("", response)))
         return response
+        try: 
+            return response.decode()
+        except UnicodeDecodeError:
+            return response
     
 # ----------------------------------------------------------------------------------------
 # Test/Demo of Classs
 # ----------------------------------------------------------------------------------------
 if (__name__ == '__main__'):
 
-    rainin = APump(com_port = 4, pump_ID = 30, simulate = False, verbose = True, serial_verbose = False)
+    rainin = APump(com_port = 'COM14', pump_ID = 30, simulate = False, verbose = True, serial_verbose = False)
     print(rainin)
 
     rainin.stopFlow()

@@ -219,6 +219,12 @@ class AnalogWaveformOutput(NIDAQTask):
         waveform = numpy.ascontiguousarray(numpy.concatenate(waveforms), dtype = numpy.float64)        
         c_samples_written = ctypes.c_long(0)
         with getLock():
+            print("sc_harvardware/nationalInstruments/nicontrol.py/self.WriteAnalogF64")
+            print(waveform_len)
+            print(timeout)
+            print(PyDAQmx.DAQmx_Val_GroupByChannel)
+            print(waveform)
+            print(ctypes.byref(c_samples_written))
             self.WriteAnalogF64(waveform_len,
                                 0,
                                 timeout,

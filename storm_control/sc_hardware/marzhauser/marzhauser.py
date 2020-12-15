@@ -31,12 +31,12 @@ class MarzhauserRS232(RS232.RS232):
             if not test:
                 self.live = False
 
-        except (AttributeError, AssertionError):
+        # FIXME: This should not catch everything!                
+        except Exception:
             print(traceback.format_exc())
             self.live = False
             print("Marzhauser Stage is not connected? Stage is not on?")
-            print("Failed to connect to the Marzhauser stage at port", kwds["port"])
-
+            
     def goAbsolute(self, x, y):
         x = x * self.um_to_unit
         y = y * self.um_to_unit
@@ -67,7 +67,9 @@ class MarzhauserRS232(RS232.RS232):
         Return the stages serial number.
         """
         return self.writeline("?readsn")
-
+    def setAcceleration(self, x_accel, y_accel):
+        self.writeline(" ".join(["!accel",str(x_accel),str(y_accel)]))
+        
     def setVelocity(self, x_vel, y_vel):
         self.writeline(" ".join(["!vel",str(x_vel),str(y_vel)]))
 
@@ -89,32 +91,13 @@ if (__name__ == "__main__"):
         return stage.readline()
     
     if stage.getStatus():
-
-        # Test communication.
-        if False:
-            print("SN:", comm(stage.serialNumber, 0.1))
-            print("zero:", comm(stage.zero, 0.1))
-            print("position:", comm(stage.position, 0.1))
-            print("goAbsolute:", comm(lambda: stage.goAbsolute(100,100), 0.5))
-            print("position:", comm(stage.position, 0.1))
-            print("goRelative:", len(comm(lambda: stage.goRelative(100,100), 0.5)))
-            print("position:", comm(stage.position, 0.1))
-
-        # Test whether we can jam up stage communication.
-        if True:
-            reps = 20
-            for i in range(reps):
-                print(i)
-                stage.position()
-                stage.goAbsolute(i*10,0)
-                stage.position()
-                time.sleep(0.1)
-
-            for i in range(3*reps + 4):
-                responses = stage.readline()
-                for resp in responses.split("\r"):
-                    print(i, resp, len(resp))
-            
+        print("SN:", comm(stage.serialNumber, 0.1))
+        print("zero:", comm(stage.zero, 0.1))
+        print("position:", comm(stage.position, 0.1))
+        print("goAbsolute:", comm(lambda: stage.goAbsolute(100,100), 0.5))
+        print("position:", comm(stage.position, 0.1))
+        print("goRelative:", len(comm(lambda: stage.goRelative(100,100), 0.5)))
+        print("position:", comm(stage.position, 0.1))
         stage.shutDown()
 
 

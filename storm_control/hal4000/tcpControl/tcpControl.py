@@ -413,20 +413,21 @@ class Controller(QtCore.QObject):
         if tcp_message.isType('Check Focus Lock'):
             # This is supposed to ensure that everything else, like stage moves is complete.
             self.controlMessage.emit(halMessage.SyncMessage())
-            
+            print(">> tcpControl.py/ Controller/Check Focus Lock")
             action = TCPAction(tcp_message = tcp_message)
             self.controlAction.emit(action)
 
         elif tcp_message.isType('Find Sum'):
             # This is supposed to ensure that everything else, like stage moves is complete.
             self.controlMessage.emit(halMessage.SyncMessage())
-            
+            print(">> tcpControl.py/ Controller/Find Sum")
             action = TCPAction(tcp_message = tcp_message)
             self.controlAction.emit(action)            
                 
         elif tcp_message.isType("Set Directory"):
             print(">> Warning the 'Set Directory' message is deprecated.")
             directory = tcp_message.getData("directory")
+            print(">> tcpControl.py/ Controller/Set Director")
             if not os.path.isdir(directory):
                 tcp_message.setError(True, directory + " is an invalid directory")
             else:
@@ -445,6 +446,8 @@ class Controller(QtCore.QObject):
             self.server.sendMessage(tcp_message)
 
         elif tcp_message.isType("Set Parameters"):
+        
+            print(">> tcpControl.py/ Controller/Set Parameters")
             if tcp_message.isTest():
                 action = TCPActionGetParameters(tcp_message = tcp_message)
             else:
@@ -454,6 +457,8 @@ class Controller(QtCore.QObject):
         elif tcp_message.isType("Take Movie"):
 
             # Check that movie length is valid.
+            
+            print(">> tcpControl.py/ Controller/Take Movie")
             if (tcp_message.getData("length") is None) or (tcp_message.getData("length") < 1):
                 tcp_message.setError(True, str(message.getData("length")) + " is an invalid movie length.")
                 self.server.sendMessage(tcp_message)

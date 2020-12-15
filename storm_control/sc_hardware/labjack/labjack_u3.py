@@ -28,7 +28,7 @@ class PWM():
         except:
             self.live = False
         if not self.live:
-            print "Could not connect to Labjack, reset by unplugging / plugging the USB connection"
+            print ("Could not connect to Labjack, reset by unplugging / plugging the USB connection")
         else:
             self.device.writeRegister(6004,0) # set FIO4 state to low.
             self.device.configTimerClock(TimerClockBase = 5, TimerClockDivisor = 1)
@@ -52,9 +52,9 @@ class PWM():
             temp = 65535 - 256*duty_cycle
             self.device.configIO(NumberOfTimersEnabled = 1)
             self.device.getFeedback(u3.Timer0Config(TimerMode = 1, Value = 65535))
-            self.device.getFeedback(u3.Timer0(Value = temp, UpdateReset = True))
+            self.device.getFeedback(u3.Timer0(Value = int(temp), UpdateReset = True))
         else:
-            print "duty cycle:", duty_cycle
+            print ("duty cycle:", duty_cycle)
 
     ## stopPWM
     #
@@ -72,13 +72,13 @@ class PWM():
 if __name__ == "__main__":
     dev = PWM()
     for i in range(10):
-        print i
+        print (i)
         dev.startPWM(i)
         time.sleep(2)
-    print "stopping"
+    print ("stopping")
     dev.stopPWM()
     time.sleep(5)
-    print "shutdown"
+    print ("shutdown")
     dev.shutDown()
 
 

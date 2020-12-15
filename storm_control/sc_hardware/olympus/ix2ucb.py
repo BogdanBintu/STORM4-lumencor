@@ -28,14 +28,14 @@ class IX2UCB(RS232.RS232):
         self.position = 0
         try:
             # open port
-            RS232.RS232.__init__(self, port, None, baud, "\r", 0.05)
+            super().__init__(self, port, None, baud, "\r", 0.05)
 
             # verify that we can talk to the filter wheel
             assert not(self.commWithResp("1LOG IN") == None)
 
         except:
             self.live = 0
-            print "Failed to connect to the IX2-UCB controller at port", port
+            print("Failed to connect to the IX2-UCB controller at port", port)
 
     ## amMoving
     #
@@ -51,7 +51,7 @@ class IX2UCB(RS232.RS232):
             else:
                 return False
         else:
-            print "IX2-UCB: Failed query motion status"
+            print("IX2-UCB: Failed query motion status")
             return False
 
     ## getPosition
@@ -64,17 +64,17 @@ class IX2UCB(RS232.RS232):
             position = resp[:-1]
             temp = position.split(" ")[-1]
             if temp == "X":
-                print "IX2-UCB: Filter wheel is still moving"
+                print("IX2-UCB: Filter wheel is still moving")
                 return 1
             else:
                 try:
                     self.position = int(temp)
                     return self.position
                 except:
-                    print "IX2-UCB: Could not parse:", temp
+                    print("IX2-UCB: Could not parse:", temp)
                     return 1
         else:
-            print "IX2-UCB: Failed to get filter wheel position"
+            print("IX2-UCB: Failed to get filter wheel position")
             return 1
 
     ## setPosition
@@ -94,21 +94,21 @@ class IX2UCB(RS232.RS232):
 # Testing
 #
 
-if __name__ == "__main__":
-    ix2 = IX2UCB()
+# if __name__ == "__main__":
+    # ix2 = IX2UCB()
 
-    print ix2.getPosition()
-    ix2.setPosition(1)
-    while ix2.amMoving():
-        time.sleep(0.1)
-    print ix2.getPosition()
+    # print ix2.getPosition()
+    # ix2.setPosition(1)
+    # while ix2.amMoving():
+        # time.sleep(0.1)
+    # print ix2.getPosition()
 
-    ix2.setPosition(3)
-    while ix2.amMoving():
-        time.sleep(0.1)
-    print ix2.getPosition()
+    # ix2.setPosition(3)
+    # while ix2.amMoving():
+        # time.sleep(0.1)
+    # print ix2.getPosition()
 
-    ix2.setPosition(1)
+    # ix2.setPosition(1)
 
 #
 # The MIT License

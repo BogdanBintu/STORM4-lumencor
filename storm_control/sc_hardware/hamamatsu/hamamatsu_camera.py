@@ -308,6 +308,7 @@ class HamamatsuCamera(object):
         self.max_width = self.getPropertyValue("image_width")[0]
         self.max_height = self.getPropertyValue("image_height")[0]
 
+        self.setPropertyValue("output_trigger_polarity[0]", 2)
 
     def captureSetup(self):
         """
@@ -821,6 +822,7 @@ class HamamatsuCameraMR(HamamatsuCamera):
         self.old_frame_bytes = -1
 
         self.setPropertyValue("output_trigger_kind[0]", 2)
+        self.setPropertyValue("output_trigger_polarity[0]", 2) #2 - positive, 1 - negative --- Bogdan change
 
     def getFrames(self):
         """

@@ -318,7 +318,6 @@ class HalModule(QtCore.QObject):
         """
         # Get the next message from the queue.
         message = self.queued_messages.popleft()
-
         try:
             self.processMessage(message)
         except Exception as exception:
