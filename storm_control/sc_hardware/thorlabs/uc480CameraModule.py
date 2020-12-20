@@ -134,7 +134,7 @@ class UC480Camera(hardwareModule.HardwareModule):
                                                        camera_id = configuration.get("camera_id"),
                                                        ini_file = configuration.get("ini_file"),
                                                        offset_file = configuration.get("offset_file"),
-                                                       pixel_clock = configuration.get("pixel_clock", 30),
+                                                       pixel_clock = configuration.get("pixel_clock", 10),
                                                        sigma = configuration.get("sigma"),
                                                        x_width = configuration.get("x_width"),
                                                        y_width = configuration.get("y_width"))
@@ -142,14 +142,14 @@ class UC480Camera(hardwareModule.HardwareModule):
         # Use the storm-analysis project for fitting. This is hopefully both faster
         # and more accurate than the Numpy/Scipy fitter.
         #
-        elif (configuration.get("use_storm_analysis", False)):
+        elif (configuration.get("use_storm_analysis", True)):
             print("> using storm-analysis for fitting.")
             self.camera = uc480Camera.CameraQPDSAFit(allow_single_fits = configuration.get("allow_single_fits", False),
                                                      background = configuration.get("background"),
                                                      camera_id = configuration.get("camera_id"),
                                                      ini_file = configuration.get("ini_file"),
                                                      offset_file = configuration.get("offset_file"),
-                                                     pixel_clock = configuration.get("pixel_clock", 30),
+                                                     pixel_clock = configuration.get("pixel_clock", 10),
                                                      sigma = configuration.get("sigma"),
                                                      x_width = configuration.get("x_width"),
                                                      y_width = configuration.get("y_width"))
@@ -162,7 +162,7 @@ class UC480Camera(hardwareModule.HardwareModule):
                                                         camera_id = configuration.get("camera_id"),
                                                         ini_file = configuration.get("ini_file"),
                                                         offset_file = configuration.get("offset_file"),
-                                                        pixel_clock = configuration.get("pixel_clock", 30),
+                                                        pixel_clock = configuration.get("pixel_clock", 10),
                                                         sigma = configuration.get("sigma"),
                                                         x_width = configuration.get("x_width"),
                                                         y_width = configuration.get("y_width"))

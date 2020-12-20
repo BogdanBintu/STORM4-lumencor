@@ -2,12 +2,12 @@
 <settings><!-- Default kilroy settings -->
   <!-- Valve parameters -->
   <valve_type type="string">Titan</valve_type>
-  <valves_com_port type="string">COM28</valves_com_port>	<!-- COM port of serial connection to valves -->  
+  <valves_com_port type="string">COM3</valves_com_port>	<!-- COM port of serial connection to valves -->  
   <num_simulated_valves type="int">0</num_simulated_valves><!-- Number of valves to simulate (Defaults to 0) -->
 
   <!-- Pump parameters -->
   <pump_class type="string">pumps.rainin_rp1</pump_class><!-- Control class for pump -->
-  <pump_com_port type="string">COM15</pump_com_port><!-- COM port of serial connection to pump -->
+  <pump_com_port type="string">COM5</pump_com_port><!-- COM port of serial connection to pump -->
   <pump_ID type="int">30</pump_ID><!-- ID of Pump -->
   <simulate_pump type="boolean">False</simulate_pump><!-- Simulate pump? (Defaults to False) -->
   <flip_flow_direction type="boolean">True</flip_flow_direction><!-- Flip the direction defined as forward? -->

@@ -1,0 +1,2 @@
+path=C:\Users\STORM4\anaconda3;C:\storm-control;C:\storm-control\storm_control\hal4000;C:\Users\STORM4\anaconda3\python38.zip;C:\Users\STORM4\anaconda3\DLLs;C:\Users\STORM4\anaconda3\lib;C:\Users\STORM4\anaconda3\lib\site-packages;C:\Users\STORM4\anaconda3\lib\site-packages\win32;C:\Users\STORM4\anaconda3\lib\site-packages\win32\lib;C:\Users\STORM4\anaconda3\lib\site-packages\Pythonwin;
+python hal4000.py xml\STORM4_config2_lumencor.xml

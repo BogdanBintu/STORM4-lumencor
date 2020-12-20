@@ -75,8 +75,8 @@
       <!-- List objectives available on this setup here. -->
       <parameters>
 	<flip_horizontal desc="Flip image horizontal (mosaic)" type="boolean">False</flip_horizontal>
-	<flip_vertical desc="Flip image vertical (mosaic)" type="boolean">False</flip_vertical>
-	<transpose desc="Transpose image (mosaic)" type="boolean">False</transpose>
+	<flip_vertical desc="Flip image vertical (mosaic)" type="boolean">True</flip_vertical>
+	<transpose desc="Transpose image (mosaic)" type="boolean">True</transpose>
 
 	<objective desc="Current objective" type="string" values="obj1,obj2,obj3">obj1</objective>
 	<obj1 desc="Objective 1" type="custom">60x,0.120,0.0,0.0</obj1>
@@ -155,9 +155,9 @@
 	     camera fire pin. Other films will just use the camera fire pin directly.
 	-->
 	<timing>
-	  <camera_fire_pin type="string">/Dev1/PFI0</camera_fire_pin>
-	  <counter type="string">/Dev1/ctr0</counter>
-	  <counter_out type="string">/Dev1/Ctr0Out</counter_out>
+	  <camera_fire_pin type="string">/Dev2/PFI0</camera_fire_pin>
+	  <counter type="string">/Dev2/ctr0</counter>
+	  <counter_out type="string">/Dev2/Ctr0Out</counter_out>
 +	  <rising_edge type="boolean">False</rising_edge>
 	</timing>
 
@@ -168,38 +168,38 @@
 
 	<ilm750>
 	  <do_task>
-	    <source type="string">/Dev1/port0/line0</source>
+	    <source type="string">/Dev2/port0/line0</source>
 	  </do_task>
 	</ilm750>
 
 	<ilm642do>
 	  <do_task>
-	    <source type="string">/Dev1/port0/line5</source>
+	    <source type="string">/Dev2/port0/line5</source>
 	  </do_task>
 	</ilm642do>
     
 	<ilm561do>
 	  <do_task>
-	    <source type="string">/Dev1/port0/line6</source>
+	    <source type="string">/Dev2/port0/line6</source>
 	  </do_task>
 	</ilm561do>
     
 	<ilm488do>
 	  <do_task>
-	    <source type="string">/Dev1/port0/line7</source>
+	    <source type="string">/Dev2/port0/line7</source>
 	  </do_task>
 	</ilm488do>
 
 
 	<ilm405>
 	  <do_task>
-	    <source type="string">/Dev1/port0/line3</source>
+	    <source type="string">/Dev2/port0/line3</source>
 	  </do_task>
 	</ilm405>
     
 	<mcl>
 	  <ao_task>
-	    <source type="string">/Dev1/ao0</source>
+	    <source type="string">/Dev2/ao0</source>
 	  </ao_task>
 	</mcl>
       </configuration>
@@ -217,7 +217,7 @@
         </ir_laser>     
       </configuration>
     </labjack_daq>
-
+    
     <!-- Focus lock control GUI.-->
     <focuslock>
       <class_name type="string">FocusLock</class_name>
@@ -385,7 +385,7 @@
       
       <configuration>
 	<baudrate type="int">57600</baudrate>
-	<port type="string">COM3</port>
+	<port type="string">COM4</port>
 	<velocity type="float">2.0</velocity>
       </configuration>
     </marzhauser_stage>
@@ -438,12 +438,12 @@
 	<background type="int">100000</background>
 	<camera_id type="int">1</camera_id>
 	<ini_file type="string">uc480_settings.ini</ini_file>
-	<offset_file type="string">C:\Users\STORM4\storm-control\storm_control\hal4000\cam_offsets_storm4.txt</offset_file>
+	<offset_file type="string">C:\storm-control\storm_control\hal4000\cam_offsets_storm4.txt</offset_file>
 	<sigma type="float">7</sigma>
 	<uc480_dll type="string">c:/windows/system32/uc480_64.dll</uc480_dll>
 	<x_width type="int">700</x_width>
 	<y_width type="int">100</y_width>
-	<units_to_microns type="float">0.2</units_to_microns> <!--old value 0.000779--> <!-- 0.15--> <!--0.2-->
+	<units_to_microns type="float">0.02</units_to_microns> <!--old value 0.000779--> <!-- 0.15--> <!--0.2-->
       </configuration>
     </uc480_camera>
 
