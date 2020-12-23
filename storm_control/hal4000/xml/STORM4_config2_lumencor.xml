@@ -443,7 +443,7 @@
 	<uc480_dll type="string">c:/windows/system32/uc480_64.dll</uc480_dll>
 	<x_width type="int">700</x_width>
 	<y_width type="int">100</y_width>
-	<units_to_microns type="float">0.02</units_to_microns> <!--old value 0.000779--> <!-- 0.15--> <!--0.2-->
+	<units_to_microns type="float">-0.02</units_to_microns> <!--old value 0.000779--> <!-- 0.15--> <!--0.2-->
       </configuration>
     </uc480_camera>
 

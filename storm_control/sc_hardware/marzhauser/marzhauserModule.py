@@ -28,7 +28,7 @@ class MarzhauserStageFunctionality(stageModule.StageFunctionality):
         # current position.
         self.updateTimer = QtCore.QTimer()
         self.updateTimer.setInterval(update_interval)
-        self.updateTimer.setSingleShot(True)
+        #self.updateTimer.setSingleShot(True) #BB: disabled this to allow  joystick refresh-- might be unstable
         self.updateTimer.timeout.connect(self.handleUpdateTimer)
         self.updateTimer.start()
 

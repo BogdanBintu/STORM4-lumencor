@@ -409,8 +409,20 @@ class Dave(QtWidgets.QMainWindow):
             self.ui.commandSequenceTreeView.updateEstimates()
 
         # Increment command to the next valid command / action.
-        next_command = self.ui.commandSequenceTreeView.getNextItem()
-
+        #next_command = self.ui.commandSequenceTreeView.getNextItem()
+        #BB: this searches in the error flag file and if true it will redo fov
+        #
+        errorDAQ = False
+        import os
+        flag_fl = r'C:\Data\errorDAQ.txt'
+        if os.path.exists(flag_fl):
+            errorDAQ = eval([ln for ln in open(flag_fl,'r')][0])
+        if errorDAQ:
+            next_command = self.ui.commandSequenceTreeView.getNextItem()#getCurrentItem()
+            currentDT = datetime.datetime.now()
+            print(str(currentDT))
+        else:
+            next_command = self.ui.commandSequenceTreeView.getNextItem()
         # Handle last command in list.
         if next_command is None:
             self.ui.runButton.setText("Start")
@@ -447,7 +459,8 @@ class Dave(QtWidgets.QMainWindow):
                 self.handlePause()
 
         # Update progress bar and current command display.
-        self.updateRunStatusDisplay()
+        if not errorDAQ:
+            self.updateRunStatusDisplay()
 
     ## handleDropXML
     #
